@@ -37,7 +37,7 @@ func check(e error) {
 func main() {
 
 	hostname := flag.String("hostname", "", "Please input hostname")
-	list := flag.String("list", "default.txt", "Subdomain List")
+	list := flag.String("list", "lists/mini.txt", "Subdomain List")
 	output := flag.Bool("output", false, "Output Result")
 
 	flag.Parse()
