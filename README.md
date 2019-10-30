@@ -1,4 +1,4 @@
-# rsdl Subdomain Pinger
+# rsdl Subdomain Scanner
 Subdomain Scan With Ping Method.
 
 
