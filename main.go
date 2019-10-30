@@ -4,19 +4,14 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
+	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/sparrc/go-ping"
-)
-
-const (
-	InfoColor    = "\033[1;34m%s\033[0m"
-	NoticeColor  = "\033[1;36m%s\033[0m"
-	WarningColor = "\033[1;33m%s\033[0m"
-	ErrorColor   = "\033[1;31m%s\033[0m"
-	DebugColor   = "\033[0;36m%s\033[0m"
 )
 
 func getPing(host string) bool {
@@ -33,10 +28,17 @@ func getPing(host string) bool {
 	return true
 }
 
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
 func main() {
 
 	hostname := flag.String("hostname", "", "Please input hostname")
 	list := flag.String("list", "default.txt", "Subdomain List")
+	output := flag.Bool("output", false, "Output Result")
 
 	flag.Parse()
 
@@ -47,6 +49,7 @@ func main() {
 	defer file.Close()
 
 	var count = 1
+	var outputText = ""
 	scanner := bufio.NewScanner(file)
 
 	fmt.Println(`
@@ -57,19 +60,30 @@ func main() {
 	██║  ██║██╗███████║██╗██████╔╝
 	╚═╝  ╚═╝╚═╝╚══════╝╚═╝╚═════╝ 
 						
-			List : ` + *list + `
-			Victim Host : ` + *hostname + `
+	List : ` + *list + `
+	Victim Host : ` + *hostname + `
 	`)
+
+	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
+	s.Start()
 
 	for scanner.Scan() {
 		domain := scanner.Text() + "." + *hostname
 		rev := getPing(domain)
 
 		if rev == true {
-			fmt.Printf(NoticeColor, strconv.FormatInt(int64(count), 10)+") "+domain+"\n")
+			s.Restart()
+			fmt.Printf("\033[1;36m%s\033[0m", strconv.FormatInt(int64(count), 10)+") "+domain+"\n")
+			outputText += domain + "\n"
 			count = count + 1
 		}
-
 	}
 
+	if *output != false {
+		d1 := []byte(outputText)
+		err := ioutil.WriteFile(*hostname, d1, 0644)
+		check(err)
+	}
+	s.Restart()
+	s.Stop()
 }
