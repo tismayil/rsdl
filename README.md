@@ -1,5 +1,5 @@
-# rsdl Subdomain Scanner
-Subdomain Scan With Ping Method.
+# rsdl Subdomain Scanner v.2
+Subdomain Scan With Ping Method & Check HTTP/S Statuses.
 
 
 [![asciicast](https://asciinema.org/a/w3PxQLza7NjAIB2nevGf7887C.svg)](https://asciinema.org/a/w3PxQLza7NjAIB2nevGf7887C)
@@ -14,6 +14,8 @@ Subdomain Scan With Ping Method.
 
 ## New Features
 * - Checking HTTP/HTTPS statuses
+* - Timeout time's updated for HTTP/HTTPS requests
+* - Scanning just got faster
 * - Scanning IP's
 * - New terminal interface
 
