@@ -2,7 +2,7 @@
 Subdomain Scan With Ping Method.
 
 
-![](https://raw.githubusercontent.com/tismayil/rsdl/master/rsdl.gif)
+[![asciicast](https://asciinema.org/a/w3PxQLza7NjAIB2nevGf7887C.svg)](https://asciinema.org/a/w3PxQLza7NjAIB2nevGf7887C)
 
 
 | Flags        | Value         | Description  |
@@ -12,8 +12,10 @@ Subdomain Scan With Ping Method.
 | --list       | /tmp/lists/example.txt | Lister for subdomains.
 
 
-#### My first project I developed with GO.
-#### I was a little novice. 😅😅😅😅
+## New Features
+* - Checking HTTP/HTTPS statuses
+* - Scanning IP's
+* - New terminal interface
 
 ## Installation
 

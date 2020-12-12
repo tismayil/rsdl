@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net"
+	"net/http"
 	"os"
 	"strconv"
 	"time"
@@ -34,6 +36,33 @@ func check(e error) {
 	}
 }
 
+func httpCheck(domain string) string {
+
+	client := http.Client{
+		Timeout: 4 * time.Second,
+	}
+
+	check, err := client.Get("http://" + domain + "/")
+	if err != nil {
+		return "N/A"
+	}
+	return strconv.Itoa(check.StatusCode)
+}
+
+func httpsCheck(domain string) string {
+
+	client := http.Client{
+		Timeout: 4 * time.Second,
+	}
+
+	check, err := client.Get("https://" + domain + "/")
+	if err != nil {
+		return "N/A"
+	}
+
+	return strconv.Itoa(check.StatusCode)
+}
+
 func main() {
 
 	hostname := flag.String("hostname", "", "Please input hostname")
@@ -48,7 +77,6 @@ func main() {
 	}
 	defer file.Close()
 
-	var count = 1
 	var outputText = ""
 	scanner := bufio.NewScanner(file)
 
@@ -60,23 +88,31 @@ func main() {
 	██║  ██║██╗███████║██╗██████╔╝██╗███████╗
 	╚═╝  ╚═╝╚═╝╚══════╝╚═╝╚═════╝ ╚═╝╚══════╝
                                          
-						
+	R.S.D.L V2				
 	List : ` + *list + `
 	Victim Host : ` + *hostname + `
 	`)
 
-	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
+	s := spinner.New(spinner.CharSets[31], 100*time.Millisecond)
 	s.Start()
+	s.Color("red", "bold")
 
 	for scanner.Scan() {
 		domain := scanner.Text() + "." + *hostname
+
 		rev := getPing(domain)
+		s.Restart()
+		s.Prefix = "Creating Requests " + domain
 
 		if rev == true {
 			s.Restart()
-			fmt.Printf("\033[1;36m%s\033[0m", strconv.FormatInt(int64(count), 10)+") "+domain+"\n")
+			ip, _ := net.LookupIP(domain)
+			fmt.Printf("\n\033[1;36m%s\033[0m", "Up Domain "+domain+"\nHTTP Response Code: "+httpCheck(domain)+" \nHTTPS Response Code: "+httpsCheck(domain)+" \n")
+			fmt.Printf("\033[1;36m%s\033[0m", "Founded IP Adresses\n")
+			fmt.Println(ip)
+			fmt.Printf("\033[1;36m%s\033[0m", "==========================================================\n")
 			outputText += domain + "\n"
-			count = count + 1
+
 		}
 	}
 
@@ -87,4 +123,6 @@ func main() {
 	}
 	s.Restart()
 	s.Stop()
+
+	log.Fatal("\n\n\n\nScan Finished\n Happy Hunting....")
 }
